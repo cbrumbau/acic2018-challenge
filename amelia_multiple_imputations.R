@@ -21,8 +21,8 @@ exclude <- scan(opt$args[3], what=character())
 mimput <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	df <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
-	# from manual examination of warnings for colinearlity for these data sets, ignore the excluded columns
 	result = tryCatch({
+		# from manual examination of warnings for colinearlity for these data sets, ignore the excluded columns
 		a.out <- amelia(df[, !(names(df) %in% exclude)], m=opt$options$number[1], idvars=c("sample_id"), empri=0.01*nrow(df))
 	}, warning = function(w) {
 		print(paste("WARNING: ",w))
