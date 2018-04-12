@@ -29,7 +29,7 @@ mimput <- function(filename) {
 	}, error = function(e) {
 		print(paste("ERROR: ",e))
 	}, finally = {
-		write.amelia(obj=a.out, file.stem = paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), "_", sep=""), quote=FALSE)
+		write.amelia(obj=a.out, file.stem=paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), "_", sep=""), quote=FALSE)
 	})
  }
  
