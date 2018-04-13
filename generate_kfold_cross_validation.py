@@ -39,7 +39,7 @@ for (dirpath, dirnames, filenames) in os.walk(args.observations_dir):
 for filename in observation_filenames:
 	if os.path.splitext(filename)[1].lower() == ".csv":
 		# Leave this file out for testing, merge the rest
-		print("Processing training set for testing on",filename)
+		print("Processing training set for testing on", filename, file=sys.stderr)
 		merge_csv([f for f in observation_filenames if f != filename], filename)
 
 sys.exit(0)
