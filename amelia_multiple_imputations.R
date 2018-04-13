@@ -21,13 +21,13 @@ exclude <- scan(opt$args[3], what=character())
 mimput <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	df <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
-	result = tryCatch({
+	result <- tryCatch({
 		# from manual examination of warnings for colinearlity for these data sets, ignore the excluded columns
 		a.out <- amelia(df[, !(names(df) %in% exclude)], m=opt$options$number[1], idvars=c("sample_id"), empri=0.01*nrow(df))
 	}, warning = function(w) {
-		print(paste("WARNING: ",w))
+		print(paste("WARNING: ", w))
 	}, error = function(e) {
-		print(paste("ERROR: ",e))
+		print(paste("ERROR: ", e))
 	}, finally = {
 		write.amelia(obj=a.out, file.stem=paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), "_", sep=""), quote=FALSE)
 	})
