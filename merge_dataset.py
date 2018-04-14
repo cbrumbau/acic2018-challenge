@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# merge_dataset.py --output=output_file.csv covariate_matrix.csv observations.csv
+# merge_dataset.py --output=output_file.csv covariate_matrix.csv factual_observations.csv
 # This Python script returns the merged factors with the observations to stdout unless an output file is specified.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 03/30/2018
@@ -19,12 +19,12 @@ def read_csv(file):
 			sys.exit('file {}, line {}: {}'.format(file, reader.line_num, e))
 	return csv_list
 
-def merge_dataset(covariate, observations, output=None):
+def merge_dataset(covariate, factual, output=None):
 	# Read in the covariate matrix and store in a list
 	covar_list = read_csv(covariate)
 
 	# Read in the observations and store in a list
-	obs_list = read_csv(observations)
+	obs_list = read_csv(factual)
 
 	# Find the common field between the two files
 	covar_header_set = set(covar_list[0])
@@ -78,10 +78,10 @@ if __name__ == "__main__":
 	
 	parser = argparse.ArgumentParser()
 	parser.add_argument('covariate', action='store', help='The covariate matrix as csv.')
-	parser.add_argument('observations', action='store', help='The factual observations as csv.')
+	parser.add_argument('factual', action='store', help='The factual observations as csv.')
 	parser.add_argument('-o', '--output', action='store', default=None, help='The file to write the merged file to. Default: None')
 	args = parser.parse_args()
 	
-	merge_dataset(args.covariate, args.observations, args.output)
+	merge_dataset(args.covariate, args.factual, args.output)
 	
 	sys.exit(0)
