@@ -19,10 +19,8 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
-	this.x <- this.set[, !(names(this.set) %in% c("X","sample_id","z","y"))]
-	this.y <- this.set[, c("y")]
 	result <- tryCatch({
-		this.rf <- randomForest(this.x, y=this.y)
+		this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")])
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
 	}, error = function(e) {
@@ -48,11 +46,12 @@ if (opt$options$merge[1]) {
 	for (this.dataset in names(files.set)) {
 		models.set = list()
 		for (this.rds in files.set[[this.dataset]]) {
-			this.rf <- readRDS(paste(opt$args[2], this.rds, sep=""))
-			models.set <- append(models.set, this.rf)
+			models.set[[length(models.set)+1]] <- readRDS(paste(opt$args[2], this.rds, sep=""))
 		}
 		# Merge into one model and write this output
+		print("Merging random forest models...")
 		merged.rf <- do.call("combine", models.set)
+		print("Saving merged model...")
 		saveRDS(merged.rf, file=paste(paste(opt$args[2], this.dataset, sep=""), ".rds", sep=""))
 	}
 } else {
