@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# merge_dataset.py covariate_matrix.csv observations.csv --output=output_file.csv
+# merge_dataset.py --output=output_file.csv covariate_matrix.csv observations.csv
 # This Python script returns the merged factors with the observations to stdout unless an output file is specified.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 03/30/2018
