@@ -26,6 +26,7 @@ rforest <- function(filename) {
 	}, error = function(e) {
 		print(paste("ERROR: ", e))
 	}, finally = {
+		print(paste("Saving ", filename, sep=""))
 		saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), ".rds", sep=""))
 	})
  }
@@ -49,7 +50,7 @@ if (opt$options$merge[1]) {
 			models.set[[length(models.set)+1]] <- readRDS(paste(opt$args[2], this.rds, sep=""))
 		}
 		# Merge into one model and write this output
-		print("Merging random forest models...")
+		print(paste("Merging random forest models for ", this.dataset))
 		merged.rf <- do.call("combine", models.set)
 		print("Saving merged model...")
 		saveRDS(merged.rf, file=paste(paste(opt$args[2], this.dataset, sep=""), ".rds", sep=""))
