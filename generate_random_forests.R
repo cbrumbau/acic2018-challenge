@@ -26,7 +26,7 @@ rforest <- function(filename) {
 	}, error = function(e) {
 		print(paste("ERROR: ", e))
 	}, finally = {
-		print(paste("Saving ", filename, sep=""))
+		print("Saving model...")
 		saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), ".rds", sep=""))
 	})
  }
