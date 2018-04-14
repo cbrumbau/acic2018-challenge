@@ -21,7 +21,7 @@ rforest <- function(filename) {
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
 	this.x <- this.set[, !(names(this.set) %in% c("X","sample_id","z","y"))]
 	this.y <- this.set[, c("y")]
-	result = tryCatch({
+	result <- tryCatch({
 		this.rf <- randomForest(this.x, y=this.y)
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
@@ -39,9 +39,9 @@ if (opt$options$merge[1]) {
 	for (this.file in files) {
 		this.dataset <- gsub("_\\d+\\.rds", "", this.file, ignore.case=T)
 		if (this.dataset %in% names(files.set)) {
-			files.set[[this.dataset]] <- c(files.set[[this.dataset]], this.file)
+			files.set[[this.dataset]] <- append(files.set[[this.dataset]], this.file)
 		} else {
-			files.set[[this.dataset]] <- c(this.file)
+			files.set[this.dataset] <- list(this.file)
 		}
 	}
 	# Read in all the randomForest objects for each data set
@@ -49,7 +49,7 @@ if (opt$options$merge[1]) {
 		models.set = list()
 		for (this.rds in files.set[[this.dataset]]) {
 			this.rf <- readRDS(paste(opt$args[2], this.rds, sep=""))
-			models.set <- c(models.set, this.rf)
+			models.set <- append(models.set, this.rf)
 		}
 		# Merge into one model and write this output
 		merged.rf <- do.call("combine", models.set)
