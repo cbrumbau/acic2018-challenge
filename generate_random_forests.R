@@ -19,8 +19,10 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
+	this.x <- this.set[, !(names(this.set) %in% c("X","sample_id","z","y"))]
+	this.y <- this.set[, c("y")]
 	result = tryCatch({
-		this.rf <- randomForest(this.set[, !(names(this.set) %in% c("X","sample_id","z","y"))], y=this.set[, c("y")])
+		this.rf <- randomForest(this.x, y=this.y)
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
 	}, error = function(e) {
