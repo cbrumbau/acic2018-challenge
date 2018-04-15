@@ -47,7 +47,7 @@ rforest <- function(datasetname, imputationlist) {
 			saveRDS(rf.fit$finalModel, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputationlist[i]), sep=""), ".rds", sep=""))
 		} else {
 			# Generate remaining imputation models with trained mtry
-			print(paste("Processing ", imputationset[i], sep=""))
+			print(paste("Processing ", imputationlist[i], sep=""))
 			this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtry)
 			print("Saving model...")
 			saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputationlist[i]), sep=""), ".rds", sep=""))
