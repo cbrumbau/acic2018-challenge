@@ -31,7 +31,7 @@ rforest <- function(filename) {
 		print(paste("ERROR: ", e))
 	}, finally = {
 		print("Saving model...")
-		saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(filename), sep=""), ".rds", sep=""))
+		h2o.saveModel(object=this.rf, path=opt$args[2], force=TRUE)
 	})
  }
 
