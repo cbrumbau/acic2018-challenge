@@ -40,7 +40,7 @@ rforest <- function(datasetname, imputationlist) {
 		if (i == 1) {
 			# Perform the k-fold cross validation
 			print(paste("Processing ", imputationlist[i], sep=""))
-			train.control <- trainControl(method="cv", number=10, verboseIter=TRUE)
+			train.control <- trainControl(method="cv", number=2, verboseIter=TRUE)
 			rf.fit <- train(x=this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], trControl=train.control, method="rf", allowParallel=TRUE)
 			trained.mtry <- rf.fit$bestTune$mtry
 			print("Saving model...")
@@ -48,7 +48,7 @@ rforest <- function(datasetname, imputationlist) {
 		} else {
 			# Generate remaining imputation models with trained mtry
 			print(paste("Processing ", imputationlist[i], sep=""))
-			this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtry)
+			this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtryn)
 			print("Saving model...")
 			saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputationlist[i]), sep=""), ".rds", sep=""))
 		}
