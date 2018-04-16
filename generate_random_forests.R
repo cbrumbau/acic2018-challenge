@@ -20,7 +20,7 @@ rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
 	result <- tryCatch({
-		this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")])
+		system.time(this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")]))
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
 	}, error = function(e) {
