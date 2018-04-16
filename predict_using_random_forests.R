@@ -7,6 +7,7 @@
 
 library("doMC")
 library("optparse")
+library("tools")
 library("randomForest")
 
 option_list <- list(
@@ -37,12 +38,12 @@ for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$t
 	}
 	print(paste("Processing", files.list, sep=" "))
 	# Predict the files in parallel
-	predict.rf <- foreach(test.data=excluded.x, .inorder=TRUE, .packages='randomForest') %dopar% {
+	system.time(predict.rf <- foreach(test.data=excluded.x, .inorder=TRUE, .packages='randomForest') %dopar% {
 		predict(this.rf, test.data)
-	}
+	})
 	# Write the results to file
 	print("Writing predicted values to file...")
 	for (i in 1:length(predict.rf)) {
-		write.csv(predict.rf[i], file=paste(opt$args[4], files.list[i], sep=""), quote=FALSE)
+		write.table(predict.rf[[i]], file=paste(opt$args[4], tools::file_path_sans_ext(files.list[i]), ".txt", sep=""), quote=FALSE, row.names=FALSE, col.names=FALSE)
 	}
 }
