@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 #
 # Rscript generate_random_forests_h2o.R imputations_folder output_folder
-# This R script generates random forests from an imputations folder to an output folder as R object files.
+# This R script generates random forests from an imputations folder to an output folder as h2o object files.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 04/15/2018
 
