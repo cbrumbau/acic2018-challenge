@@ -62,7 +62,7 @@ rforest <- function(dataset.name, imputation.list) {
 	print(Sys.time()-start.time)
 	# Save merged forest
 	print("Saving model...")
-	saveRDS(this.rf, file=paste(paste(opt$args[2], datasetname, sep=""), ".rds", sep=""))
+	saveRDS(this.rf, file=paste(paste(opt$args[2], dataset.name, sep=""), ".rds", sep=""))
  }
 
 files <- list.files(path=opt$args[1])
