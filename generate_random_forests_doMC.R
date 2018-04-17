@@ -54,11 +54,12 @@ rforest <- function(dataset.name, imputation.list) {
 	}
 	print(paste("Generating random forests for", imputation.list, sep=" "))
 	# Use nested foreach to first subdivide each data set, then subdivide by trees on a data set
-	system.time(this.rf <- foreach(this.x=imputed.x, this.y=imputed.y, .combine=combine, .multicombine=TRUE, .packages='randomForest') %:%
+	start.time <- Sys.time()
+	this.rf <- foreach(this.x=imputed.x, this.y=imputed.y, .combine=combine, .multicombine=TRUE, .packages='randomForest') %:%
 		foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
 			randomForest(x=this.x, y=this.y, ntree=ntree, importance=TRUE)
 		}
-	)
+	print(Sys.time()-start.time)
 	# Save merged forest
 	print("Saving model...")
 	saveRDS(this.rf, file=paste(paste(opt$args[2], datasetname, sep=""), ".rds", sep=""))
