@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 #
-# Rscript generate_random_forests.R --merge imputations_folder output_folder
+# Rscript generate_random_forests.R --include --merge imputations_folder output_folder
 # This R script generates random forests from an imputations folder to an output folder as R object files.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 04/09/2018
@@ -10,17 +10,29 @@ library("tools")
 library("randomForest")
 
 option_list <- list(
+	make_option(c("-i", "--include"), type="character", default="", 
+		help="file containing specific predictors to exclusively use for training the random forest [default %default]"),
 	make_option(c("-m", "--merge"), type="logical", default=FALSE, 
 		help="merge the imputation random forest models by data set and do not compute the random forests [default %default]")
 )
 opt_parser <- OptionParser(usage = "%prog [options] imputations_folder output_folder", option_list=option_list)
 opt <- parse_args(opt_parser, positional_arguments=2)
 
+if (nchar(opt$options$include[1]) > 0) {
+	include <- scan(opt$options$include[1], what=character())
+}
+
 rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
 	result <- tryCatch({
-		system.time(this.rf <- randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")]))
+		this.x <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+		this.y <- this.set[, c("y")]
+		if (nchar(opt$options$include[1]) > 0) {
+			system.time(this.rf <- randomForest(this.x[, include], y=this.y))
+		} else {
+			system.time(this.rf <- randomForest(this.x, y=this.y))
+		}
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
 	}, error = function(e) {
