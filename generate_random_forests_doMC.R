@@ -12,7 +12,7 @@ library("randomForest")
 
 option_list <- list(
 	make_option(c("-i", "--include"), type="character", default="", 
-		help="file containing specific predictors to exclusively use for training the random forest [default %default]")
+		help="file containing specific features to use for training the random forest [default %default]")
 )
 opt_parser <- OptionParser(usage = "%prog [options] imputations_folder output_folder", option_list=option_list)
 opt <- parse_args(opt_parser, positional_arguments=2)

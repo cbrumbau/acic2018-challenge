@@ -20,7 +20,9 @@ rforest <- function(filename) {
 	x.indep <- c(1:grep("^y$", colnames(train.h2o))-1)
 	y.dep <- grep("^y$", colnames(train.h2o))
 	result <- tryCatch({
+		start.time <- Sys.time()
 		this.rf <- h2o.randomForest(y=y.dep, x=x.indep, training_frame=train.h2o, ntrees=500)
+		print(Sys.time()-start.time)
 	}, warning = function(w) {
 		print(paste("WARNING: ", w))
 	}, error = function(e) {

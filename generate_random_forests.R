@@ -11,7 +11,7 @@ library("randomForest")
 
 option_list <- list(
 	make_option(c("-i", "--include"), type="character", default="", 
-		help="file containing specific predictors to exclusively use for training the random forest [default %default]"),
+		help="file containing specific features to use for training the random forest [default %default]"),
 	make_option(c("-m", "--merge"), type="logical", default=FALSE, 
 		help="merge the imputation random forest models by data set and do not compute the random forests [default %default]")
 )

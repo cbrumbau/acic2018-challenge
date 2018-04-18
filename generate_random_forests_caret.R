@@ -33,28 +33,32 @@ splitbyset <- function(filelist) {
 	return(byset)
 }
 
-rforest <- function(datasetname, imputationlist) {
-	print(paste("Processing ", datasetname, sep=""))
+rforest <- function(dataset.name, imputation.list) {
+	print(paste("Processing ", dataset.name, sep=""))
 	# Perform training on first imputation, use trained mtry for remaining imputations
 	trained.mtry <- NULL
-	for (i in 1:length(imputationlist)) {
-		this.set <- read.csv(file=paste(opt$args[1], imputationlist[i], sep=""), header=TRUE, sep=",")
+	for (i in 1:length(imputation.list)) {
+		this.set <- read.csv(file=paste(opt$args[1], imputation.list[i], sep=""), header=TRUE, sep=",")
 		if (i == 1) {
 			# Perform the k-fold cross validation
-			print(paste("Processing ", imputationlist[i], sep=""))
+			print(paste("Processing ", imputation.list[i], sep=""))
 			train.control <- trainControl(method="cv", number=10, verboseIter=TRUE)
-			system.time(rf.fit <- train(x=this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], trControl=train.control, method="rf", allowParallel=TRUE))
+			start.time <- Sys.time()
+			rf.fit <- train(x=this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], trControl=train.control, method="rf", allowParallel=TRUE)
+			print(Sys.time()-start.time)
 			trained.mtry <- rf.fit$bestTune$mtry
 			print("Saving model...")
-			saveRDS(rf.fit$finalModel, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputationlist[i]), sep=""), ".rds", sep=""))
+			saveRDS(rf.fit$finalModel, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputation.list[i]), sep=""), ".rds", sep=""))
 		} else {
 			# Generate remaining imputation models with trained mtry
-			print(paste("Processing ", imputationlist[i], sep=""))
-			system.time(this.rf <- foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
+			print(paste("Processing ", imputation.list[i], sep=""))
+			start.time <- Sys.time()
+			this.rf <- foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
 				randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtryn, ntree=ntree)
-			})
+			}
+			print(Sys.time()-start.time)
 			print("Saving model...")
-			saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputationlist[i]), sep=""), ".rds", sep=""))
+			saveRDS(this.rf, file=paste(paste(opt$args[2], tools::file_path_sans_ext(imputation.list[i]), sep=""), ".rds", sep=""))
 		}
 	}
  }
