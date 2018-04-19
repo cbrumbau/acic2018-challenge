@@ -59,7 +59,7 @@ enet <-function(dataset.name, imputation.list) {
 	print(paste("Generating elasticnets for", imputation.list, sep=" "))
 	start.time <- Sys.time()
 	en.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
-		train(x=this.x, y=this.y, trControl=train.control, method="enet", allowParallel=TRUE)
+		train(x=this.x, y=this.y, trControl=train.control, method="glmnet", tuneLength=10)
 	}
 	print(Sys.time()-start.time)
 	print("Saving models...")
