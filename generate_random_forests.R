@@ -26,7 +26,7 @@ rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
 	result <- tryCatch({
-		this.x <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+		this.x <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 		this.y <- this.set[, c("y")]
 		if (nchar(opt$options$include[1]) > 0) {
 			system.time(this.rf <- randomForest(this.x[, include], y=this.y))

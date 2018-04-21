@@ -16,7 +16,7 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 rforest <- function(filename) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE, sep=",")
-	train.h2o <- as.h2o(this.set[, !names(this.set) %in% c("X", "sample_id", "z")])
+	train.h2o <- as.h2o(this.set[, !names(this.set) %in% c("sample_id", "z")])
 	x.indep <- c(1:grep("^y$", colnames(train.h2o))-1)
 	y.dep <- grep("^y$", colnames(train.h2o))
 	result <- tryCatch({

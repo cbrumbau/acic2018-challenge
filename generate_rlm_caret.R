@@ -49,7 +49,7 @@ enet <-function(dataset.name, imputation.list) {
 	imputed.x <- list()
 	imputed.y <- list()
 	for (this.set in imputed.set) {
-		imputed.x[[length(imputed.x)+1]] <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+		imputed.x[[length(imputed.x)+1]] <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 		if (nchar(opt$options$include[1]) > 0) {
 			imputed.x[[length(imputed.x)]] <- this.set[, include]
 		}

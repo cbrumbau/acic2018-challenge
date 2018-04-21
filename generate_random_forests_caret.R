@@ -44,7 +44,7 @@ rforest <- function(dataset.name, imputation.list) {
 			print(paste("Processing ", imputation.list[i], sep=""))
 			train.control <- trainControl(method="cv", number=10, verboseIter=TRUE)
 			start.time <- Sys.time()
-			rf.fit <- train(x=this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], trControl=train.control, method="rf", allowParallel=TRUE)
+			rf.fit <- train(x=this.set[, !names(this.set) %in% c("sample_id", "z", "y")], y=this.set[, c("y")], trControl=train.control, method="rf", allowParallel=TRUE)
 			print(Sys.time()-start.time)
 			trained.mtry <- rf.fit$bestTune$mtry
 			print("Saving model...")
@@ -54,7 +54,7 @@ rforest <- function(dataset.name, imputation.list) {
 			print(paste("Processing ", imputation.list[i], sep=""))
 			start.time <- Sys.time()
 			this.rf <- foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
-				randomForest(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtryn, ntree=ntree)
+				randomForest(this.set[, !names(this.set) %in% c("sample_id", "z", "y")], y=this.set[, c("y")], mtry=trained.mtryn, ntree=ntree)
 			}
 			print(Sys.time()-start.time)
 			print("Saving model...")

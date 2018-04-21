@@ -21,7 +21,7 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 # Read in the features (and process inclusion list if provided)
 print("Reading in features...")
 this.set <- read.csv(opt$args[1], header=TRUE)
-this.set <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+this.set <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 if (nchar(opt$options$include[1]) > 0) {
 	include <- scan(opt$options$include[1], what=character())
 	this.set <- this.set[, include]

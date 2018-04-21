@@ -25,7 +25,7 @@ if (nchar(opt$options$include[1]) > 0) {
 
 print(paste("Processing ", opt$args[1], sep=""))
 this.set <- read.csv(file=opt$args[1], header=TRUE, sep=",")
-this.x <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+this.x <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 if (nchar(opt$options$include[1]) > 0) {
 	this.x <- this.x[, include]
 }

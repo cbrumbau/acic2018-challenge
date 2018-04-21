@@ -49,7 +49,7 @@ enet <-function(dataset.name, imputation.list) {
 	imputed.x <- list()
 	imputed.y <- list()
 	for (this.set in imputed.set) {
-		imputed.x[[length(imputed.x)+1]] <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+		imputed.x[[length(imputed.x)+1]] <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 		if (nchar(opt$options$include[1]) > 0) {
 			imputed.x[[length(imputed.x)]] <- this.set[, include]
 		}
@@ -59,7 +59,7 @@ enet <-function(dataset.name, imputation.list) {
 	print(paste("Generating elasticnets for", imputation.list, sep=" "))
 	start.time <- Sys.time()
 	en.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
-		train(x=this.x, y=this.y, trControl=train.control, method="glmnet", tuneLength=10)
+		train(x=this.x, y=this.y, trControl=train.control, method="glmnet")
 	}
 	print(Sys.time()-start.time)
 	print("Saving models...")

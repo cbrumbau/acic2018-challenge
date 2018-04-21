@@ -22,7 +22,7 @@ this.set <- read.csv(file=opt$args[1], header=TRUE, sep=",")
 
 # Perform the feature selection
 start.time <- Sys.time()
-result.list <- rfcv(this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")], this.set[, c("y")], cv.fold=opt$options$folds[1], step=opt$options$step[1])
+result.list <- rfcv(this.set[, !names(this.set) %in% c("sample_id", "z", "y")], this.set[, c("y")], cv.fold=opt$options$folds[1], step=opt$options$step[1])
 print(Sys.time()-start.time)
 
 # Save to file

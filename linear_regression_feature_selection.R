@@ -20,7 +20,7 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 this.set <- read.csv(file=opt$args[1], header=TRUE, sep=",")
 
 # Calculate correlation matrix
-this.set <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+this.set <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 correlation.matrix <- cor(this.set)
 
 # Determine highly corrected features

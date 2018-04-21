@@ -47,7 +47,7 @@ for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$t
 		} else if (nchar(opt$options$include[1]) > 0) {
 			this.set <- this.set[, include]
 		}
-		x.list[[length(x.list)+1]] <- this.set[, !names(this.set) %in% c("X", "sample_id", "z", "y")]
+		x.list[[length(x.list)+1]] <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
 	}
 	print(paste("Processing", files.list, sep=" "))
 	# Predict the files in parallel
