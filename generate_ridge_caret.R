@@ -40,7 +40,7 @@ splitbyset <- function(filelist) {
 	return(byset)
 }
 
-enet <-function(dataset.name, imputation.list) {
+ridge <-function(dataset.name, imputation.list) {
 	print(paste("Processing ", dataset.name, sep=""))
 	imputed.set <- list()
 	for (file in imputation.list) {
@@ -59,7 +59,7 @@ enet <-function(dataset.name, imputation.list) {
 	print(paste("Generating ridge regression for", imputation.list, sep=" "))
 	start.time <- Sys.time()
 	en.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
-		train(x=this.x, y=this.y, trControl=train.control, method="ridge")
+		train(x=this.x, y=this.y, trControl=train.control, method="foba")
 	}
 	print(Sys.time()-start.time)
 	print("Saving models...")
@@ -74,6 +74,6 @@ if (opt$options$merge[1]) {
 	files <- list.files(path=opt$args[1])
 	files.set <- splitbyset(files)
 	for (this.dataset in names(files.set)) {
-		enet(this.dataset, files.set[[this.dataset]])
+		ridge(this.dataset, files.set[[this.dataset]])
 	}
 }

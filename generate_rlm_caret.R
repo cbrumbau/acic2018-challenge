@@ -40,7 +40,7 @@ splitbyset <- function(filelist) {
 	return(byset)
 }
 
-enet <-function(dataset.name, imputation.list) {
+rlm <-function(dataset.name, imputation.list) {
 	print(paste("Processing ", dataset.name, sep=""))
 	imputed.set <- list()
 	for (file in imputation.list) {
@@ -74,6 +74,6 @@ if (opt$options$merge[1]) {
 	files <- list.files(path=opt$args[1])
 	files.set <- splitbyset(files)
 	for (this.dataset in names(files.set)) {
-		enet(this.dataset, files.set[[this.dataset]])
+		rlm(this.dataset, files.set[[this.dataset]])
 	}
 }
