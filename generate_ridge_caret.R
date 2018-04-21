@@ -58,13 +58,13 @@ ridge <-function(dataset.name, imputation.list) {
 	train.control <- trainControl(method="cv", number=opt$options$folds[1], verboseIter=TRUE)
 	print(paste("Generating ridge regression for", imputation.list, sep=" "))
 	start.time <- Sys.time()
-	en.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
+	model.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
 		train(x=this.x, y=this.y, trControl=train.control, method="foba")
 	}
 	print(Sys.time()-start.time)
 	print("Saving models...")
-	for (i in 1:length(en.list)) {
-		saveRDS(en.list[[i]], file=paste(opt$args[2], tools::file_path_sans_ext(imputation.list[i]), ".rds", sep=""))
+	for (i in 1:length(model.list)) {
+		saveRDS(model.list[[i]], file=paste(opt$args[2], tools::file_path_sans_ext(imputation.list[i]), ".rds", sep=""))
 	}
 }
 

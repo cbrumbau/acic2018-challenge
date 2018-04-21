@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 #
-# Rscript generate_rlm_caret.R --folds --include --merge imputations_folder output_folder
-# This R script generates robust linear regression models from an imputations folder to an output folder as R object files.
+# Rscript generate_pls_caret.R --folds --include --merge imputations_folder output_folder
+# This R script generates partial least squares regression models from an imputations folder to an output folder as R object files.
 #
-# Chris Brumbaugh, cbrumbau@gmail.com, 04/17/2018
+# Chris Brumbaugh, cbrumbau@gmail.com, 04/21/2018
 
 library("caret")
 library("doMC")
@@ -40,7 +40,7 @@ splitbyset <- function(filelist) {
 	return(byset)
 }
 
-rlm <-function(dataset.name, imputation.list) {
+pls <-function(dataset.name, imputation.list) {
 	print(paste("Processing ", dataset.name, sep=""))
 	imputed.set <- list()
 	for (file in imputation.list) {
@@ -56,10 +56,10 @@ rlm <-function(dataset.name, imputation.list) {
 		imputed.y[[length(imputed.y)+1]] <- this.set[, c("y")]
 	}
 	train.control <- trainControl(method="cv", number=opt$options$folds[1], verboseIter=TRUE)
-	print(paste("Generating rlm for", imputation.list, sep=" "))
+	print(paste("Generating partial least squares regression for", imputation.list, sep=" "))
 	start.time <- Sys.time()
 	model.list <- foreach(this.x=imputed.x, this.y=imputed.y, .inorder=TRUE, .packages='caret') %dopar% {
-		train(x=this.x, y=this.y, trControl=train.control, method="rlm")
+		train(x=this.x, y=this.y, trControl=train.control, method="pls")
 	}
 	print(Sys.time()-start.time)
 	print("Saving models...")
@@ -74,6 +74,6 @@ if (opt$options$merge[1]) {
 	files <- list.files(path=opt$args[1])
 	files.set <- splitbyset(files)
 	for (this.dataset in names(files.set)) {
-		rlm(this.dataset, files.set[[this.dataset]])
+		pls(this.dataset, files.set[[this.dataset]])
 	}
 }
