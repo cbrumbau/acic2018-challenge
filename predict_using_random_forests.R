@@ -38,7 +38,7 @@ for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$t
 	# Process test sets and apply exclusion or inclusion if requested
 	test.set <- list()
 	for (file in files.list) {
-		test.set[[length(test.set)+1]] <- read.csv(file=paste(opt$args[3], file, sep=""), header=TRUE, sep=",")
+		test.set[[length(test.set)+1]] <- read.csv(file=paste(opt$args[2], file, sep=""), header=TRUE, sep=",")
 	}
 	x.list <- list()
 	for (this.set in test.set) {
