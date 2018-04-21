@@ -31,7 +31,6 @@ if (nchar(opt$options$exclude[1]) > 0) {
 # Read in the model
 print("Reading in model...")
 this.rf <- readRDS(opt$args[1])
-exclude <- scan(opt$args[2], what=character())
 
 # Get all the test set files and process in chunks for the number of requested threads
 test.files <- list.files(path=opt$args[3])
