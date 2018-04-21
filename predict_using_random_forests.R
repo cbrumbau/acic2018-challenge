@@ -36,7 +36,7 @@ exclude <- scan(opt$args[2], what=character())
 # Get all the test set files and process in chunks for the number of requested threads
 test.files <- list.files(path=opt$args[3])
 for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$threads[1]))) {
-	# Remove excluded columns from imputations and non-test set columns
+	# Process test sets and apply exclusion or inclusion if requested
 	test.set <- list()
 	for (file in files.list) {
 		test.set[[length(test.set)+1]] <- read.csv(file=paste(opt$args[3], file, sep=""), header=TRUE, sep=",")
