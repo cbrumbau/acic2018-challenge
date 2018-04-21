@@ -33,7 +33,7 @@ print("Reading in model...")
 this.rf <- readRDS(opt$args[1])
 
 # Get all the test set files and process in chunks for the number of requested threads
-test.files <- list.files(path=opt$args[3])
+test.files <- list.files(path=opt$args[2])
 for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$threads[1]))) {
 	# Process test sets and apply exclusion or inclusion if requested
 	test.set <- list()
@@ -59,6 +59,6 @@ for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$t
 	# Write the results to file
 	print("Writing predicted values to file...")
 	for (i in 1:length(predict.rf)) {
-		write.table(predict.rf[[i]], file=paste(opt$args[4], tools::file_path_sans_ext(files.list[i]), ".txt", sep=""), quote=FALSE, row.names=FALSE, col.names=FALSE)
+		write.table(predict.rf[[i]], file=paste(opt$args[3], tools::file_path_sans_ext(files.list[i]), ".txt", sep=""), quote=FALSE, row.names=FALSE, col.names=FALSE)
 	}
 }
