@@ -43,26 +43,44 @@ rforest <- function(dataset.name, imputation.list) {
 	for (file in imputation.list) {
 		imputed.set[[length(imputed.set)+1]] <- read.csv(file=paste(opt$args[1], file, sep=""), header=TRUE, sep=",")
 	}
-	imputed.x <- list()
-	imputed.y <- list()
+	treated.x <- list()
+	treated.y <- list()
+	untreated.x <- list()
+	untreated.y <- list()
 	for (this.set in imputed.set) {
-		imputed.x[[length(imputed.x)+1]] <- this.set[, !names(this.set) %in% c("sample_id", "z", "y")]
+		# Process treated rows
+		treated.set <- subset(this.set, z==1)
+		treated.x[[length(treated.x)+1]] <- treated.set[, !names(treated.set) %in% c("sample_id", "z", "y")]
 		if (nchar(opt$options$include[1]) > 0) {
-			imputed.x[[length(imputed.x)]] <- this.set[, include]
+			treated.x[[length(treated.x)]] <- treated.set[, include]
 		}
-		imputed.y[[length(imputed.y)+1]] <- this.set[, c("y")]
+		treated.y[[length(treated.y)+1]] <- treated.set[, c("y")]
+		# Process untreated rows
+		untreated.set <- subset(this.set, z==0)
+		untreated.x[[length(untreated.x)+1]] <- untreated.set[, !names(untreated.set) %in% c("sample_id", "z", "y")]
+		if (nchar(opt$options$include[1]) > 0) {
+			untreated.x[[length(untreated.x)]] <- untreated.set[, include]
+		}
+		untreated.y[[length(untreated.y)+1]] <- untreated.set[, c("y")]
 	}
 	print(paste("Generating random forests for", imputation.list, sep=" "))
-	# Use nested foreach to first subdivide each data set, then subdivide by trees on a data set
+	# Use nested foreach to first subdivide each data set, then subdivide by trees on a data set for treated/untreated
 	start.time <- Sys.time()
-	this.rf <- foreach(this.x=imputed.x, this.y=imputed.y, .combine=combine, .multicombine=TRUE, .packages='randomForest') %:%
+	treated.rf <- foreach(this.x=treated.x, this.y=treated.y, .combine=combine, .multicombine=TRUE, .packages='randomForest') %:%
+		foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
+			randomForest(x=this.x, y=this.y, ntree=ntree, importance=TRUE)
+		}
+	print(Sys.time()-start.time)
+	start.time <- Sys.time()
+	untreated.rf <- foreach(this.x=untreated.x, this.y=untreated.y, .combine=combine, .multicombine=TRUE, .packages='randomForest') %:%
 		foreach(ntree=rep(100, 5), .combine=combine, .multicombine=TRUE, .packages='randomForest') %dopar% {
 			randomForest(x=this.x, y=this.y, ntree=ntree, importance=TRUE)
 		}
 	print(Sys.time()-start.time)
 	# Save merged forest
-	print("Saving model...")
-	saveRDS(this.rf, file=paste(paste(opt$args[2], dataset.name, sep=""), ".rds", sep=""))
+	print("Saving models...")
+	saveRDS(treated.rf, file=paste(paste(opt$args[2], dataset.name, "_treated", sep=""), ".rds", sep=""))
+	saveRDS(untreated.rf, file=paste(paste(opt$args[2], dataset.name, "_untreated", sep=""), ".rds", sep=""))
  }
 
 files <- list.files(path=opt$args[1])
