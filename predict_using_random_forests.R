@@ -22,7 +22,7 @@ registerDoMC()
 test.files <- list.files(path=opt$args[2])
 for (files.list in split(test.files, ceiling(seq_along(test.files)/opt$options$threads[1]))) {
 	# Process test sets and corresponding models
-	print("Processing test sets and corresponding models...")
+	print("Processing chunk for test sets and corresponding models...")
 	untreated.model.list <- list()
 	treated.model.list <- list()
 	test.list <- list()
