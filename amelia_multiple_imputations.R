@@ -27,7 +27,7 @@ mimput <- function(filename, exclude=list()) {
 	a.out <- NULL
 	attempt <- 1
 	exclude <- c()
-	while (is.null(a.out) && attempt <= 5) {
+	while (is.null(a.out) && attempt <= 10) {
 		attempt <- attempt + 1
 		this.set <- this.set[, !names(this.set) %in% exclude]
 		result <- tryCatch({
