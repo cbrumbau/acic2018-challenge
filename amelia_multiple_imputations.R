@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 #
-# Rscript amelia_multiple_imputations.R --exclude --imputations observations_folder output_folder
+# Rscript amelia_multiple_imputations.R --imputations observations_folder output_folder
 # This R script generates multiple imputations from an observations folder to an output folder as csv files and excludes named columns from Amelia in an exclude text file.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 04/04/2018
