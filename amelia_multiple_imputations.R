@@ -19,6 +19,11 @@ opt <- parse_args(opt_parser, positional_arguments=2)
 mimput <- function(filename, exclude=list()) {
 	print(paste("Processing ", filename, sep=""))
 	this.set <- read.csv(file=paste(opt$args[1], filename, sep=""), header=TRUE)
+	if (!anyNA(this.set)) {
+		# Avoid Amelia Error Code 39 to continue script
+		print("Has no missing values to impute")
+		return(NA)
+	}
 	a.out <- NULL
 	attempt <- 1
 	exclude <- c()
