@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 #
 # Rscript amelia_multiple_imputations.R --imputations observations_folder output_folder
-# This R script generates multiple imputations from an observations folder to an output folder as csv files and excludes named columns from Amelia in an exclude text file.
+# This R script generates multiple imputations from an observations folder to an output folder as csv files.
 #
 # Chris Brumbaugh, cbrumbau@gmail.com, 04/04/2018
 
@@ -10,7 +10,7 @@ library("optparse")
 library("tools")
 
 option_list <- list(
-	make_option(c("-i", "--imputations"), type="integer", default=5, 
+	make_option(c("-i", "--imputations"), type="integer", default=5,
 		help="number of imputations to generate [default %default]", metavar="number")
 )
 opt_parser <- OptionParser(usage = "%prog [options] observations_folder output_folder", option_list=option_list)
